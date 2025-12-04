@@ -1,0 +1,1558 @@
+    question-ai-logo
+    managemanage
+    managemanage
+    useruser
+    fullfull
+    closeclose
+    Chat AI
+    Hello! Is there any question I can help you with?
+    Who was the first person to step foot on the moon?
+    What can you do?
+    Ask AI
+    logo
+    more
+    index.html
+    <!DOCTYPE html>
+    <html class="dark" lang="en">
+
+    <head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <title>CareerMate - AI Career Assistant</title>
+        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+        <link href="https://fonts.googleapis.com" rel="preconnect" />
+        <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+        <script>
+            tailwind.config = {
+                darkMode: "class",
+                theme: {
+                    extend: {
+                        colors: {
+                            "primary": "#0066FF",
+                            "background-light": "#f7f8fa",
+                            "background-dark": "#111827",
+                            "ai-bubble-light": "#f1f2f6",
+                            "ai-bubble-dark": "#1f2937",
+                            "user-bubble-light": "#0066FF",
+                            "user-bubble-dark": "#0052cc",
+                            "electric-blue": "#0066FF",
+                            "light-bg": "#FFFFFF",
+                            "dark-bg": "#0F1419",
+                            "light-secondary-bg": "#F7F9FA",
+                            "dark-secondary-bg": "#1A2026",
+                            "light-text": "#0F1419",
+                            "dark-text": "#E7E9EA",
+                            "light-border": "#EFF3F4",
+                            "dark-border": "#2F3336",
+                            "light-gray": "#D9D9D9",
+                            "dark-gray": "#71767B",
+                        },
+                        fontFamily: {
+                            "display": ["Inter", "sans-serif"]
+                        },
+                        borderRadius: {
+                            "DEFAULT": "0.5rem",
+                            "lg": "0.75rem",
+                            "xl": "12px",
+                            "full": "9999px"
+                        },
+                        boxShadow: {
+                            'soft': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05)',
+                        }
+                    },
+                },
+            }
+        </script>
+        <style>
+            .bouncing-loader {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .bouncing-loader>div {
+                width: 8px;
+                height: 8px;
+                margin: 3px;
+                border-radius: 50%;
+                background-color: #0066FF;
+                animation: bouncing-loader 1.4s infinite ease-in-out both;
+            }
+
+            .bouncing-loader .bounce1 {
+                animation-delay: -0.32s;
+            }
+
+            .bouncing-loader .bounce2 {
+                animation-delay: -0.16s;
+            }
+
+            @keyframes bouncing-loader {
+
+                0%,
+                80%,
+                100% {
+                    transform: scale(0);
+                }
+
+                40% {
+                    transform: scale(1.0);
+                }
+            }
+
+            .message-animation {
+                animation: slideInUp 0.3s ease-out;
+            }
+
+            .compact-spacing p {
+                margin-bottom: 0.5rem;
+            }
+
+            .compact-spacing ul {
+                margin-bottom: 0.5rem;
+            }
+
+            @keyframes slideInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .file-upload-area {
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .file-upload-area:hover {
+                border-color: #0066FF;
+                box-shadow: 0 0 15px rgba(0, 102, 255, 0.2);
+                transform: translateY(-2px);
+            }
+
+            .file-upload-area.dragover {
+                border-color: #0066FF;
+                background-color: rgba(0, 102, 255, 0.05);
+                transform: scale(1.02);
+            }
+
+            .focus-glow:focus-within {
+                box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.2);
+            }
+
+            ::-webkit-scrollbar {
+                width: 6px;
+            }
+
+            ::-webkit-scrollbar-track {
+                background: transparent;
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background-color: #0066FF;
+                border-radius: 3px;
+            }
+
+            .voice-interface {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.85);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+                backdrop-filter: blur(20px);
+            }
+
+            .voice-circle {
+                width: 200px;
+                height: 200px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #0066FF, #004ACC);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .voice-circle.listening {
+                animation: pulse-listening 1.5s infinite;
+            }
+
+            .voice-circle.speaking {
+                animation: pulse-speaking 0.8s infinite;
+            }
+
+            @keyframes pulse-listening {
+                0% {
+                    transform: scale(1);
+                    box-shadow: 0 0 0 0 rgba(0, 102, 255, 0.7);
+                }
+
+                50% {
+                    transform: scale(1.1);
+                    box-shadow: 0 0 0 20px rgba(0, 102, 255, 0);
+                }
+
+                100% {
+                    transform: scale(1);
+                    box-shadow: 0 0 0 0 rgba(0, 102, 255, 0);
+                }
+            }
+
+            @keyframes pulse-speaking {
+
+                0%,
+                100% {
+                    transform: scale(1);
+                }
+
+                50% {
+                    transform: scale(1.05);
+                }
+            }
+
+            .voice-text {
+                color: white;
+                font-size: 1.25rem;
+                font-weight: 600;
+                margin-top: 2rem;
+                text-align: center;
+            }
+
+            .voice-status {
+                color: rgba(255, 255, 255, 0.7);
+                font-size: 0.875rem;
+                margin-top: 0.5rem;
+            }
+
+            .job-card {
+                background: linear-gradient(135deg, rgba(0, 102, 255, 0.05) 0%, rgba(0, 102, 255, 0.02) 100%);
+                border: 1px solid rgba(0, 102, 255, 0.1);
+                transition: all 0.2s ease;
+            }
+
+            .job-card:hover {
+                border-color: rgba(0, 102, 255, 0.3);
+                box-shadow: 0 4px 12px rgba(0, 102, 255, 0.1);
+            }
+
+            /* Enhanced Speak Button Styles */
+            .speak-btn {
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .speak-btn:hover {
+                transform: translateY(-1px);
+            }
+
+            .speak-btn.speaking {
+                background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+            }
+
+            .speak-btn.speaking:hover {
+                background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+            }
+
+            @keyframes speak-pulse {
+
+                0%,
+                100% {
+                    opacity: 1;
+                }
+
+                50% {
+                    opacity: 0.7;
+                }
+            }
+
+            .speak-btn.speaking .speak-icon {
+                animation: speak-pulse 1s infinite;
+            }
+        </style>
+    </head>
+
+    <body class="bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text font-display antialiased">
+        <div class="flex h-screen">
+            <!-- Enhanced Sidebar with Original Functionality -->
+            <aside
+                class="w-[320px] bg-light-bg dark:bg-dark-bg flex flex-col shrink-0 border-r border-light-border dark:border-dark-border">
+                <!-- Header -->
+                <div class="p-6 flex items-center gap-3">
+                    <svg fill="none" height="32" viewBox="0 0 32 32" width="32" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M16 3C8.82 3 3 8.82 3 16C3 23.18 8.82 29 16 29C23.18 29 29 23.18 29 16C29 8.82 23.18 3 16 3ZM16 26C10.48 26 6 21.52 6 16C6 10.48 10.48 6 16 6C21.52 6 26 10.48 26 16C26 21.52 21.52 26 16 26Z"
+                            fill="#0066FF"></path>
+                        <path d="M19 13H13V19H19V13Z" fill="#0066FF" opacity="0.6"></path>
+                    </svg>
+                    <h1 class="text-xl font-bold">CareerMate</h1>
+                </div>
+
+                <!-- Main Content Area -->
+                <div class="flex-1 px-6 space-y-6 overflow-y-auto">
+                    <!-- Resume Upload Section -->
+                    <div class="file-upload-area border-2 border-dashed border-light-border dark:border-dark-border rounded-xl p-6 text-center cursor-pointer"
+                        onclick="document.getElementById('resumeFile').click()"
+                        ondragover="event.preventDefault(); this.classList.add('dragover');"
+                        ondragleave="this.classList.remove('dragover');" ondrop="handleFileDrop(event)">
+                        <input type="file" id="resumeFile" accept=".pdf,.doc,.docx" style="display: none;"
+                            onchange="handleFileSelect(event)" />
+                        <span class="material-symbols-outlined text-4xl text-dark-gray">upload_file</span>
+                        <p class="mt-2 text-sm font-medium text-dark-gray">Upload your resume or files</p>
+                        <p class="text-xs text-dark-gray/70">PDF, DOCX, TXT up to 16MB</p>
+                    </div>
+                    <div id="uploadStatus" class="hidden mt-2 text-sm font-medium"></div>
+
+                <!-- Tools Section -->
+                <div class="space-y-2">
+                    <h2 class="text-sm font-semibold text-dark-gray px-2" data-translate="ai_features">AI Features</h2>
+                    <ul class="space-y-1">
+                        <!-- Resume Analysis - Triggers chat context -->
+                        <li><a class="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-light-secondary-bg dark:hover:bg-dark-secondary-bg transition-colors cursor-pointer"
+                                onclick="startContextChat('resume')">
+                                <span class="material-symbols-outlined text-xl">description</span>
+                                <span data-translate="resume_analysis">Resume Analysis</span>
+                            </a>
+                        </li>
+                    
+                    <!-- Career Chat - Resets to default welcome -->
+                    <li><a class="flex items-center gap-3 px-2 py-2 rounded-lg bg-electric-blue/10 text-electric-blue font-medium cursor-pointer"
+                            onclick="resetToDefaultChat()">
+                            <span class="material-symbols-outlined text-xl">chat</span>
+                            <span data-translate="career_chat">Career Chat</span>
+                        </a>
+                    </li>
+
+                    
+                        <!-- Smart Job Search - Triggers chat context -->
+                        <li><a class="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-light-secondary-bg dark:hover:bg-dark-secondary-bg transition-colors cursor-pointer"
+                                onclick="startContextChat('job_search')">
+                                <span class="material-symbols-outlined text-xl">work</span>
+                                <span data-translate="smart_job_search">Smart Job Search</span>
+                            </a>
+                        </li>
+                    
+                        <!-- Interview Prep - Triggers chat context -->
+                        <li><a class="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-light-secondary-bg dark:hover:bg-dark-secondary-bg transition-colors cursor-pointer"
+                                onclick="startContextChat('interview')">
+                                <span class="material-symbols-outlined text-xl">model_training</span>
+                                <span data-translate="interview_prep">Interview Prep</span>
+                            </a>
+                        </li>
+                    
+                        <!-- LinkedIn Jobs - Opens external link -->
+                        <li><a class="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-light-secondary-bg dark:hover:bg-dark-secondary-bg transition-colors"
+                                href="https://www.linkedin.com/jobs/" target="_blank" rel="noopener noreferrer">
+                                <span class="material-symbols-outlined text-xl">business_center</span>
+                                <span data-translate="linkedin_jobs">LinkedIn Jobs</span>
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+
+
+                <!-- Settings Section -->
+                <div class="p-6 border-t border-light-border dark:border-dark-border space-y-4">
+                    <div class="flex justify-between items-center">
+                        <label class="text-sm font-medium" for="language-select">Language</label>
+                        <select
+                            class="form-select bg-light-bg dark:bg-dark-bg border-light-border dark:border-dark-border rounded-lg text-sm focus:ring-electric-blue focus:border-electric-blue"
+                            id="language-select">
+                            <option value="en">English</option>
+                            <option value="hi">Hindi</option>
+                            <option value="pa">Punjabi</option>
+                            <option value="kn">Kannada</option>
+                        </select>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <label class="text-sm font-medium" for="voice-toggle">Voice Input</label>
+                        <button
+                            class="relative inline-flex items-center h-6 rounded-full w-11 transition-colors bg-light-border dark:bg-dark-border focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-electric-blue"
+                            id="voice-toggle">
+                            <span class="sr-only">Enable voice input</span>
+                            <span
+                                class="inline-block w-4 h-4 transform bg-white rounded-full transition-transform translate-x-1 dark:translate-x-6"></span>
+                        </button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Chat Area -->
+            <main class="flex-1 flex flex-col h-screen">
+                <!-- Header with Theme Toggle -->
+                <!-- Header with Theme Toggle -->
+                <header
+                    class="flex items-center justify-between h-16 shrink-0 px-6 border-b border-light-border dark:border-dark-border">
+                    <div class="flex items-center gap-3">
+                        <h2 class="text-lg font-semibold">AI Career Assistant</h2>
+                    </div>
+                    <button
+                        class="p-2 rounded-full hover:bg-light-secondary-bg dark:hover:bg-dark-secondary-bg text-dark-gray dark:text-dark-text transition-colors"
+                        onclick="toggleTheme()" id="theme-toggle">
+                        <span class="material-symbols-outlined" id="theme-icon">light_mode</span>
+                    </button>
+                </header>
+
+
+                <!-- Chat Messages Area -->
+                <div class="flex-1 overflow-y-auto px-4 py-4" id="chatMessages">
+                    <div class="mx-auto max-w-4xl space-y-4">
+
+                        <!-- Enhanced Welcome Message -->
+                        <div class="flex items-start gap-4 message-animation">
+                            <div class="h-10 w-10 shrink-0 rounded-full bg-primary/20 flex items-center justify-center">
+                                <span class="material-symbols-outlined text-primary text-lg">smart_toy</span>
+                            </div>
+                            <div class="group relative flex-1">
+                                <div
+                                    class="rounded-xl rounded-tl-none bg-ai-bubble-light dark:bg-ai-bubble-dark p-3 shadow-soft">
+                                    <div class="compact-spacing space-y-2 text-gray-800 dark:text-gray-200">
+                                        <p class="text-base leading-relaxed">Hello there! 👋 I'm CareerMate, your personal
+                                            AI career assistant.</p>
+                                        <div class="space-y-2">
+                                            <p class="font-semibold text-gray-900 dark:text-white">Here's what I can help
+                                                with:</p>
+                                            <ul class="space-y-1 pl-2">
+                                                <li class="flex items-start"><span
+                                                        class="mr-2 mt-1.5 text-xs text-primary">•</span><span><b
+                                                            class="font-semibold">Career Guidance:</b> Get advice on your
+                                                        career path.</span></li>
+                                                <li class="flex items-start"><span
+                                                        class="mr-2 mt-1.5 text-xs text-primary">•</span><span><b
+                                                            class="font-semibold">Skill Development:</b> Find resources to
+                                                        learn new skills.</span></li>
+                                                <li class="flex items-start"><span
+                                                        class="mr-2 mt-1.5 text-xs text-primary">•</span><span><b
+                                                            class="font-semibold">Salary Information:</b> Benchmark your
+                                                        salary expectations.</span></li>
+                                                <li class="flex items-start"><span
+                                                        class="mr-2 mt-1.5 text-xs text-primary">•</span><span><b
+                                                            class="font-semibold">Interview Preparation:</b> Practice common
+                                                        interview questions.</span></li>
+                                            </ul>
+                                        </div>
+                                        <p>How can I assist you today?</p>
+                                    </div>
+                                </div>
+                                <div class="mt-2 flex flex-wrap gap-2">
+
+                                    <button onclick="sendSuggestion('Career guidance')"
+                                        class="flex items-center gap-2 rounded-full bg-red-100 dark:bg-red-900/50 px-3 py-1.5 text-sm font-medium text-red-700 dark:text-red-300 shadow-sm transition-colors hover:bg-red-200 dark:hover:bg-red-900">
+                                        <span class="material-symbols-outlined text-base">explore</span> Career guidance
+                                    </button>
+                                    <button onclick="sendSuggestion('Skill development')"
+                                        class="flex items-center gap-2 rounded-full bg-blue-100 dark:bg-blue-900/50 px-3 py-1.5 text-sm font-medium text-blue-700 dark:text-blue-300 shadow-sm transition-colors hover:bg-blue-200 dark:hover:bg-blue-900">
+                                        <span class="material-symbols-outlined text-base">school</span> Skill development
+                                    </button>
+                                    <button onclick="sendSuggestion('Salary information')"
+                                        class="flex items-center gap-2 rounded-full bg-orange-100 dark:bg-orange-900/50 px-3 py-1.5 text-sm font-medium text-orange-700 dark:text-orange-300 shadow-sm transition-colors hover:bg-orange-200 dark:hover:bg-orange-900">
+                                        <span class="material-symbols-outlined text-base">payments</span> Salary information
+                                    </button>
+                                    <button onclick="sendSuggestion('Interview preparation')"
+                                        class="flex items-center gap-2 rounded-full bg-purple-100 dark:bg-purple-900/50 px-3 py-1.5 text-sm font-medium text-purple-700 dark:text-purple-300 shadow-sm transition-colors hover:bg-purple-200 dark:hover:bg-purple-900">
+                                        <span class="material-symbols-outlined text-base">work</span> Interview preparation
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Enhanced Typing Indicator -->
+                <div class="px-4 hidden" id="typingIndicator">
+                    <div class="mx-auto max-w-4xl">
+                        <div class="flex items-start gap-4">
+                            <div class="h-10 w-10 shrink-0 rounded-full bg-primary/20 flex items-center justify-center">
+                                <span class="material-symbols-outlined text-primary text-lg">smart_toy</span>
+                            </div>
+                            <div class="group relative flex-1">
+                                <div
+                                    class="rounded-xl rounded-tl-none bg-ai-bubble-light dark:bg-ai-bubble-dark p-3 shadow-soft w-20">
+                                    <div class="bouncing-loader">
+                                        <div class="bounce1"></div>
+                                        <div class="bounce2"></div>
+                                        <div class="bounce3"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Enhanced Input Area -->
+                <footer
+                    class="bg-background-light dark:bg-background-dark border-t border-light-border dark:border-dark-border p-4">
+                    <div class="mx-auto max-w-4xl">
+                        <div class="flex items-center gap-4">
+                            <div class="relative w-full">
+                                <textarea
+                                    class="form-textarea w-full resize-none rounded-xl border border-gray-300 bg-white py-3 pl-12 pr-28 text-base leading-tight text-gray-800 transition-all duration-200 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:placeholder-gray-400"
+                                    id="messageInput"
+                                    oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px';"
+                                    placeholder="Type your message..." rows="1"></textarea>
+
+                                <div class="absolute bottom-2 left-3 flex items-center">
+                                    <button
+                                        class="rounded-full p-2 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+                                        onclick="startVoiceInput()">
+                                        <span class="material-symbols-outlined">mic</span>
+                                    </button>
+                                </div>
+
+                                <div class="absolute bottom-2 right-2 flex items-center">
+                                    <button
+                                        class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-white transition-colors hover:bg-primary/90 disabled:opacity-50"
+                                        onclick="sendMessage()">
+                                        <span class="material-symbols-outlined text-xl">send</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </main>
+        </div>
+
+        <script>
+            // Enhanced Resume Upload Handler
+                async function uploadResume(file) {
+                    const formData = new FormData();
+                    formData.append('resume', file);
+
+                    const statusDiv = document.getElementById('uploadStatus');
+                    statusDiv.className = 'mt-2 text-sm text-primary font-medium';
+                    statusDiv.textContent = `📤 Uploading ${file.name}...`;
+                    statusDiv.classList.remove('hidden');
+
+                    try {
+                        console.log('📤 Uploading file:', file.name);
+
+                        const response = await fetch('http://localhost:5000/api/upload-resume', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        const data = await response.json();
+                        console.log('📥 Upload response:', data);
+
+                        if (data.success) {
+                            statusDiv.className = 'mt-2 text-sm text-green-600 font-medium';
+                            statusDiv.textContent = '✅ Resume analyzed successfully!';
+
+                            addMessage(`Uploaded: ${file.name}`, true);
+                            addMessage(data.message, false);
+
+                            if (data.analysis && data.analysis.job_suggestions) {
+                                setTimeout(() => {
+                                    addJobSuggestions(data.analysis);
+                                }, 1000);
+                            }
+
+                            showToast('Resume uploaded and analyzed!', 'success');
+
+                            setTimeout(() => {
+                                statusDiv.classList.add('hidden');
+                            }, 3000);
+                        } else {
+                            statusDiv.className = 'mt-2 text-sm text-red-500 font-medium';
+                            statusDiv.textContent = `❌ ${data.error}`;
+                            showToast(data.error, 'error');
+                        }
+                    } catch (error) {
+                        console.error('Upload error:', error);
+                        statusDiv.className = 'mt-2 text-sm text-red-500 font-medium';
+                        statusDiv.textContent = '❌ Upload failed. Make sure Flask server is running.';
+                        showToast('Upload failed. Check server connection.', 'error');
+                    }
+                }
+        // Handle file selection from input
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                console.log('File selected:', file.name, file.type, file.size);
+
+                const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain'];
+                const maxSize = 16 * 1024 * 1024; // 16MB
+
+                if (!allowedTypes.includes(file.type) && !file.name.match(/\.(pdf|doc|docx|txt)$/i)) {
+                    showToast('Invalid file type. Please upload PDF, DOC, DOCX, or TXT', 'error');
+                    return;
+                }
+
+                if (file.size > maxSize) {
+                    showToast('File too large. Maximum size is 16MB', 'error');
+                    return;
+                }
+
+                uploadResume(file);
+            }
+        }
+        // Handle drag and drop
+        function handleFileDrop(event) {
+            event.preventDefault();
+            event.currentTarget.classList.remove('dragover');
+
+            const files = event.dataTransfer.files;
+            if (files.length > 0) {
+                const file = files[0];
+                console.log('File dropped:', file.name);
+
+                const input = document.getElementById('resumeFile');
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                input.files = dataTransfer.files;
+
+                handleFileSelect({ target: input });
+            }
+        }
+        // Display job suggestions
+        function addJobSuggestions(analysis) {
+            const container = document.getElementById('chatMessages').querySelector('.mx-auto');
+            const jobsDiv = document.createElement('div');
+            jobsDiv.className = 'message-animation flex items-start gap-4';
+
+            let jobsHtml = analysis.job_suggestions.map(job => `
+            <div class="job-card p-4 rounded-xl mb-3">
+                <h4 class="font-semibold text-gray-900 dark:text-white text-lg mb-1">${job.title}</h4>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">${job.company}</p>
+                <div class="flex items-center justify-between">
+                    <span class="text-xs bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300 px-3 py-1 rounded-full font-medium">
+                        ${job.match_score}% Match
+                    </span>
+                    <a href="${job.linkedin_url}" target="_blank" 
+                    class="text-xs text-primary hover:text-primary/80 font-medium">
+                        View on LinkedIn →
+                    </a>
+                </div>
+            </div>
+        `).join('');
+
+            jobsDiv.innerHTML = `
+            <div class="h-10 w-10 shrink-0 rounded-full bg-primary/20 flex items-center justify-center">
+                <span class="material-symbols-outlined text-primary text-lg">smart_toy</span>
+            </div>
+            <div class="group relative flex-1">
+                <div class="rounded-xl rounded-tl-none bg-ai-bubble-light dark:bg-ai-bubble-dark p-4 shadow-soft">
+                    <div class="space-y-4 text-gray-800 dark:text-gray-200">
+                        <p class="font-semibold text-gray-900 dark:text-white text-lg flex items-center gap-2">
+                            💼 Job Recommendations
+                        </p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Based on your resume, here are some matching opportunities:</p>
+                        ${jobsHtml}
+                        <p class="text-xs text-primary font-medium">
+                            ✨ Skills found: ${analysis.skills_found.join(', ')}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        `;
+
+            container.appendChild(jobsDiv);
+            container.parentElement.scrollTop = container.parentElement.scrollHeight;
+        }
+
+            // Reset to default career chat
+                function resetToDefaultChat() {
+                    // Clear existing messages
+                    const chatContainer = document.getElementById('chatMessages').querySelector('.mx-auto');
+                    chatContainer.innerHTML = '';
+
+                    // Default welcome message
+                    const welcomeMessage = `👋 **Hello! I'm CareerMate!**
+
+    I help with:
+    • Job search & salaries
+    • Tech skills & learning  
+    • Interview preparation
+    • Resume optimization
+
+    Ask me about salaries, skills, or jobs!
+
+    What can I help you with?`;
+
+                    const defaultSuggestions = ['Career guidance', 'Skill development', 'Salary information', 'Interview preparation'];
+
+                    addMessage(welcomeMessage, false, defaultSuggestions);
+                    showToast('Switched to Career Chat mode', 'success');
+                }
+        // Context-based chat starter with translation support
+        async function startContextChat(context) {
+            // Clear existing messages
+            const chatContainer = document.getElementById('chatMessages').querySelector('.mx-auto');
+            chatContainer.innerHTML = '';
+
+            // Show loading state
+            document.getElementById('typingIndicator').classList.remove('hidden');
+
+            // Define context-specific queries to send to backend
+            const contextQueries = {
+                'resume': 'I need help with resume analysis and optimization',
+                'job_search': 'I want to search for jobs',
+                'interview': 'I need interview preparation help'
+            };
+
+            const query = contextQueries[context];
+
+            try {
+                // Call backend API with current language
+                const response = await fetch('http://localhost:5000/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: query,
+                        language: currentLanguage
+                    })
+                });
+
+                const data = await response.json();
+
+                document.getElementById('typingIndicator').classList.add('hidden');
+
+                if (data.success) {
+                    // Add the translated response
+                    addMessage(data.response, false, data.suggestions);
+
+                    const contextNames = {
+                        'resume': 'Resume Analysis',
+                        'job_search': 'Job Search',
+                        'interview': 'Interview Prep'
+                    };
+                    showToast(`Switched to ${contextNames[context]} mode`, 'success');
+                } else {
+                    addMessage('Sorry, something went wrong. Please try again.', false);
+                }
+            } catch (error) {
+                console.error('Context chat error:', error);
+                document.getElementById('typingIndicator').classList.add('hidden');
+                addMessage('Connection error. Make sure the server is running.', false);
+                showToast('Server connection failed', 'error');
+            }
+        }
+
+
+            let currentLanguage = 'en';
+            let isSpeakerEnabled = false;
+            let isListening = false;
+            let recognition = null;
+            let conversationHistory = [];
+
+            // Language configurations matching backend
+            const LANGUAGES = {
+                'en': 'English',
+                'hi': 'हिन्दी',
+                'pa': 'ਪੰਜਾਬੀ',
+                'kn': 'ಕನ್ನಡ'
+            };
+
+            // Theme Toggle Function
+            // Theme Toggle Function
+                function toggleTheme() {
+                    const html = document.documentElement;
+                    const themeIcon = document.getElementById('theme-icon');
+                    const isDark = html.classList.contains('dark');
+
+                    if (isDark) {
+                        html.classList.remove('dark');
+                        themeIcon.textContent = 'light_mode';
+                        localStorage.setItem('theme', 'light');
+                    } else {
+                        html.classList.add('dark');
+                        themeIcon.textContent = 'dark_mode';
+                        localStorage.setItem('theme', 'dark');
+                    }
+                }
+
+                // Initialize theme from localStorage
+                function initializeTheme() {
+                    const savedTheme = localStorage.getItem('theme');
+                    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    const themeIcon = document.getElementById('theme-icon');
+
+                    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                        document.documentElement.classList.add('dark');
+                        if (themeIcon) themeIcon.textContent = 'dark_mode';
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                        if (themeIcon) themeIcon.textContent = 'light_mode';
+                    }
+                }
+
+
+            // Initialize theme from localStorage
+            function initializeTheme() {
+                const savedTheme = localStorage.getItem('theme');
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+                if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            }
+
+            // Enhanced Toast Notification Function
+            function showToast(message, type = 'info') {
+                const toast = document.createElement('div');
+                const bgColor = {
+                    'info': 'bg-primary',
+                    'success': 'bg-green-500',
+                    'error': 'bg-red-500',
+                    'warning': 'bg-yellow-500'
+                }[type] || 'bg-primary';
+
+                toast.className = `fixed top-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50 transition-all duration-300 transform translate-x-0 max-w-md`;
+                toast.innerHTML = `
+                    <div class="flex items-start gap-2">
+                        <span class="flex-shrink-0 mt-0.5">
+                            ${type === 'error' ? '❌' : type === 'success' ? '✅' : type === 'warning' ? '⚠️' : 'ℹ️'}
+                        </span>
+                        <p class="text-sm font-medium">${message}</p>
+                    </div>
+                `;
+
+                document.body.appendChild(toast);
+
+                // Auto-hide after 4 seconds
+                setTimeout(() => {
+                    toast.style.transform = 'translateX(100%)';
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 300);
+                }, 4000);
+
+                // Click to dismiss
+                toast.addEventListener('click', () => {
+                    toast.style.transform = 'translateX(100%)';
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 300);
+                });
+            }
+
+            // Enhanced Speak Handler Functions
+            function handleSpeakClick(button, text) {
+                console.log('🔊 Speak button clicked');
+                console.log('Text to speak:', text.substring(0, 50) + '...');
+
+                const isCurrentlySpeaking = button.getAttribute('data-speaking') === 'true';
+
+                if (isCurrentlySpeaking) {
+                    // Stop current speech
+                    stopCurrentSpeech();
+                    resetSpeakButton(button);
+                    return;
+                }
+
+                // Update button state
+                button.setAttribute('data-speaking', 'true');
+                button.innerHTML = `
+                    <span class="speak-icon animate-pulse">⏸️</span>
+                    <span class="speak-text">Stop</span>
+                `;
+                button.classList.add('speaking');
+
+                // Speak the message
+                speakMessage(text, button);
+            }
+
+            function resetSpeakButton(button) {
+                button.setAttribute('data-speaking', 'false');
+                button.innerHTML = `
+                    <span class="speak-icon">🔊</span>
+                    <span class="speak-text">Speak</span>
+                `;
+                button.classList.remove('speaking');
+            }
+
+            function stopCurrentSpeech() {
+                // Stop any ongoing speech
+                if ('speechSynthesis' in window) {
+                    speechSynthesis.cancel();
+                }
+
+                // Hide voice interface if showing
+                hideVoiceInterface();
+
+                console.log('🛑 Speech stopped');
+            }
+
+            // Enhanced message function with beautiful formatting
+            function addMessage(message, isUser = false, suggestions = []) {
+                const container = document.getElementById('chatMessages').querySelector('.mx-auto');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message-animation ${isUser ? 'flex items-start justify-end gap-4' : 'flex items-start gap-4'}`;
+
+                if (isUser) {
+                    messageDiv.innerHTML = `
+                        <div class="group relative max-w-lg">
+                            <div class="rounded-xl rounded-tr-none bg-user-bubble-light p-3 text-white shadow-soft">
+                                <p class="text-[15px] leading-relaxed">${message}</p>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    const finalSuggestions = suggestions.length > 0 ? suggestions : getSuggestions(message, getLastUserMessage());
+                    const suggestionsHtml = finalSuggestions.length > 0 ? `
+                        <div class="mt-2 flex flex-wrap gap-2">
+                            ${finalSuggestions.map(suggestion => `
+                                <button onclick="sendSuggestion('${suggestion.replace(/'/g, "\\'")}');" 
+                                        class="flex items-center gap-2 rounded-full bg-blue-100 dark:bg-blue-900/50 px-3 py-1.5 text-sm font-medium text-blue-700 dark:text-blue-300 shadow-sm transition-colors hover:bg-blue-200 dark:hover:bg-blue-900">
+                                    ${suggestion}
+                                </button>
+                            `).join('')}
+                        </div>
+                    ` : '';
+
+                    const formattedMessage = formatAIMessage(message);
+                    // Clean text for speech (remove HTML and markdown)
+                    const cleanTextForSpeech = message
+                        .replace(/\*\*/g, '')
+                        .replace(/###/g, '')
+                        .replace(/•/g, '')
+                        .replace(/\[.*?\]/g, '')
+                        .replace(/\n+/g, ' ')
+                        .replace(/\s+/g, ' ')
+                        .trim();
+
+                    messageDiv.innerHTML = `
+                        <div class="h-10 w-10 shrink-0 rounded-full bg-primary/20 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-primary text-lg">smart_toy</span>
+                        </div>
+                        <div class="group relative flex-1">
+                            <div class="rounded-xl rounded-tl-none bg-ai-bubble-light dark:bg-ai-bubble-dark p-3 shadow-soft">
+                                <div class="compact-spacing space-y-2 text-gray-800 dark:text-gray-200">
+                                    ${formattedMessage}
+                                    <button onclick="handleSpeakClick(this, \`${cleanTextForSpeech.replace(/`/g, '\\`')}\`)" 
+                                            class="speak-btn mt-3 px-3 py-1.5 text-xs bg-primary hover:bg-primary/90 text-white rounded-full transition-colors flex items-center gap-1"
+                                            data-speaking="false">
+                                        <span class="speak-icon">🔊</span>
+                                        <span class="speak-text">Speak</span>
+                                    </button>
+                                </div>
+                            </div>
+                            ${suggestionsHtml}
+                            <div class="absolute -right-2 top-0 flex -translate-y-1/2 scale-90 items-center gap-1 opacity-0 transition-all duration-200 group-hover:scale-100 group-hover:opacity-100">
+                                <button class="rounded-full bg-white p-1.5 text-gray-500 shadow-md hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
+                                    <span class="material-symbols-outlined text-base">content_copy</span>
+                                </button>
+                                <button class="rounded-full bg-white p-1.5 text-gray-500 shadow-md hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
+                                    <span class="material-symbols-outlined text-base">thumb_up</span>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                container.appendChild(messageDiv);
+                container.parentElement.scrollTop = container.parentElement.scrollHeight;
+            }
+
+            // Format AI messages with proper structure
+            function formatAIMessage(message) {
+                // Convert bullet points
+                message = message.replace(/• /g, '<li class="flex items-start"><span class="mr-2 mt-1.5 text-xs text-primary">•</span><span>');
+                message = message.replace(/\n- /g, '</span></li><li class="flex items-start"><span class="mr-2 mt-1.5 text-xs text-primary">•</span><span>');
+
+                // Wrap in ul if bullet points exist
+                if (message.includes('<li class="flex items-start">')) {
+                    message = '<ul class="space-y-1 pl-2">' + message + '</span></li></ul>';
+                }
+
+                // Format bold text
+                message = message.replace(/\*\*(.*?)\*\*/g, '<b class="font-semibold text-gray-900 dark:text-white">$1</b>');
+
+                // Format paragraphs
+                message = message.replace(/\n\n/g, '</p><p class="text-base leading-relaxed">');
+                message = '<p class="text-base leading-relaxed">' + message + '</p>';
+
+                return message;
+            }
+
+            // Enhanced speakMessage function with better error handling
+            async function speakMessage(text, buttonElement = null) {
+                try {
+                    console.log('🗣️ Starting TTS for:', text.substring(0, 50) + '...');
+                    console.log('🌍 Language:', currentLanguage);
+
+                    showVoiceInterface('speaking', 'Generating speech...');
+
+                    // Try backend TTS first
+                    const response = await fetch('http://localhost:5000/api/speak',  
+ {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            text: text,
+                            language: currentLanguage
+                        })
+                    });
+
+                    if (response.ok) {
+                        console.log('✅ Backend TTS response received');
+                        updateVoiceStatus('🔊 Playing audio...');
+
+                        const blob = await response.blob();
+                        const audio = new Audio(URL.createObjectURL(blob));
+
+                        audio.onloadstart = () => {
+                            console.log('🔄 Audio loading...');
+                            updateVoiceStatus('⏳ Loading audio...');
+                        };
+
+                        audio.oncanplaythrough = () => {
+                            console.log('▶️ Audio ready to play');
+                            updateVoiceStatus('🔊 Speaking...');
+                        };
+
+                        audio.onended = () => {
+                            console.log('✅ Audio finished');
+                            hideVoiceInterface();
+                            if (buttonElement) resetSpeakButton(buttonElement);
+                        };
+
+                        audio.onerror = (e) => {
+                            console.error('❌ Audio playback error:', e);
+                            hideVoiceInterface();
+                            if (buttonElement) resetSpeakButton(buttonElement);
+
+                            // Fallback to browser TTS
+                            fallbackToWebSpeech(text, buttonElement);
+                        };
+
+                        await audio.play();
+
+                    } else {
+                        console.log('⚠️ Backend TTS failed, using browser TTS');
+                        hideVoiceInterface();
+                        fallbackToWebSpeech(text, buttonElement);
+                    }
+
+                } catch (error) {
+                    console.error('❌ TTS error:', error);
+                    hideVoiceInterface();
+                    if (buttonElement) resetSpeakButton(buttonElement);
+
+                    // Show user-friendly error
+                    showToast('Speech generation failed. Check your connection.', 'error');
+
+                    // Try browser TTS as last resort
+                    fallbackToWebSpeech(text, buttonElement);
+                }
+            }
+
+            // Fallback to browser's built-in TTS
+            function fallbackToWebSpeech(text, buttonElement = null) {
+                try {
+                    if (!('speechSynthesis' in window)) {
+                        throw new Error('Speech synthesis not supported');
+                    }
+
+                    console.log('🔄 Using browser TTS fallback');
+
+                    speechSynthesis.cancel(); // Clear any previous speech
+
+                    const utterance = new SpeechSynthesisUtterance(text);
+
+                    // Language mapping for browser TTS
+                    const langMap = {
+                        'en': 'en-US',
+                        'hi': 'hi-IN',
+                        'pa': 'hi-IN', // Fallback to Hindi
+                        'kn': 'hi-IN'  // Fallback to Hindi
+                    };
+
+                    utterance.lang = langMap[currentLanguage] || 'en-US';
+                    utterance.rate = 0.9;
+                    utterance.pitch = 1.0;
+                    utterance.volume = 0.8;
+
+                    utterance.onstart = () => {
+                        console.log('🔊 Browser TTS started');
+                        showToast('Using browser speech...', 'info');
+                    };
+
+                    utterance.onend = () => {
+                        console.log('✅ Browser TTS finished');
+                        if (buttonElement) resetSpeakButton(buttonElement);
+                    };
+
+                    utterance.onerror = (e) => {
+                        console.error('❌ Browser TTS error:', e);
+                        if (buttonElement) resetSpeakButton(buttonElement);
+                        showToast('Speech failed. Try again later.', 'error');
+                    };
+
+                    speechSynthesis.speak(utterance);
+
+                } catch (error) {
+                    console.error('❌ Fallback TTS error:', error);
+                    if (buttonElement) resetSpeakButton(buttonElement);
+                    showToast('Text-to-speech not available in this browser.', 'error');
+                }
+            }
+
+            function addJobSuggestions(analysis) {
+                const container = document.getElementById('chatMessages').querySelector('.mx-auto');
+                const jobsDiv = document.createElement('div');
+                jobsDiv.className = 'message-animation flex items-start gap-4';
+
+                let jobsHtml = analysis.job_suggestions.map(job => `
+                    <div class="job-card p-4 rounded-xl mb-3">
+                        <h4 class="font-semibold text-gray-900 dark:text-white text-lg mb-1">${job.title}</h4>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">${job.company}</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300 px-3 py-1 rounded-full font-medium">
+                                ${job.match_score}% Match
+                            </span>
+                            <a href="${job.linkedin_url}" target="_blank" class="text-xs text-primary hover:text-primary/80 font-medium">
+                                View on LinkedIn →
+                            </a>
+                        </div>
+                    </div>
+                `).join('');
+
+                jobsDiv.innerHTML = `
+                    <div class="h-10 w-10 shrink-0 rounded-full bg-primary/20 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-primary text-lg">smart_toy</span>
+                    </div>
+                    <div class="group relative flex-1">
+                        <div class="rounded-xl rounded-tl-none bg-ai-bubble-light dark:bg-ai-bubble-dark p-4 shadow-soft">
+                            <div class="space-y-4 text-gray-800 dark:text-gray-200">
+                                <p class="font-semibold text-gray-900 dark:text-white text-lg flex items-center gap-2">🎯 Job Recommendations</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Based on your resume, here are some matching opportunities:</p>
+                                ${jobsHtml}
+                                <p class="text-xs text-primary font-medium">💡 Skills found: ${analysis.skills_found.join(', ')}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(jobsDiv);
+                container.parentElement.scrollTop = container.parentElement.scrollHeight;
+            }
+
+            // Smart contextual suggestions
+            function getSuggestions(aiMessage, userMessage = '') {
+                const aiLower = aiMessage.toLowerCase();
+                const userLower = userMessage.toLowerCase();
+
+                if (aiLower.includes('resume') || aiLower.includes('cv') || userLower.includes('resume')) {
+                    return ['Upload my resume now', 'Resume formatting tips', 'ATS optimization guide'];
+                }
+
+                if (aiLower.includes('job') && aiLower.includes('linkedin')) {
+                    return ['Find AI jobs', 'Frontend Developer roles', 'Data Scientist positions'];
+                }
+
+                return ['Find me jobs', 'Analyze my resume', 'Interview preparation'];
+            }
+
+            function getLastUserMessage() {
+                for (let i = conversationHistory.length - 1; i >= 0; i--) {
+                    if (conversationHistory[i].isUser) {
+                        return conversationHistory[i].message;
+                    }
+                }
+                return '';
+            }
+
+            function sendSuggestion(suggestion) {
+                const input = document.getElementById('messageInput');
+                input.value = suggestion;
+                sendMessage();
+            }
+
+            // Enhanced sendMessage function
+            // Enhanced sendMessage function
+                async function sendMessage() {
+                    const input = document.getElementById('messageInput');
+                    const message = input.value.trim();
+
+                    if (!message) return;
+
+                    conversationHistory.push({
+                        message: message,
+                        isUser: true,
+                        timestamp: new Date()
+                    });
+
+                    addMessage(message, true);
+                    input.value = '';
+                    input.style.height = 'auto';
+
+                    document.getElementById('typingIndicator').classList.remove('hidden');
+
+                    try {
+                        console.log('🔵 Sending message:', message);
+                        console.log('🌍 Current language:', currentLanguage);
+
+                        const response = await fetch('http://localhost:5000/api/chat', {  // ✅ FIXED
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                message: message,
+                                language: currentLanguage
+                            })
+                        });
+
+                        const data = await response.json();
+
+                        console.log('📥 Backend response:', data);
+
+                        document.getElementById('typingIndicator').classList.add('hidden');
+
+                        if (data.success) {
+                            conversationHistory.push({
+                                message: data.response,
+                                isUser: false,
+                                timestamp: new Date()
+                            });
+
+                            const suggestions = data.suggestions || [];
+                            addMessage(data.response, false, suggestions);
+                        } else {
+                            addMessage('Sorry, I encountered an error. Please try again.', false);
+                        }
+                    } catch (error) {
+                        document.getElementById('typingIndicator').classList.add('hidden');
+                        console.error('Chat error:', error);
+
+                        // More user-friendly error handling
+                        if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                            addMessage('Connection error. Please check if the server is running on http://localhost:5000', false);
+                            showToast('Server not responding. Check if Flask app is running.', 'error');
+                        } else {
+                            addMessage('Something went wrong. Please try again.', false);
+                            showToast('Request failed. Please try again.', 'error');
+                        }
+                    }
+                }
+
+
+            function startVoiceInput() {
+                if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                    alert('🎤 Voice input not supported in this browser. Try Chrome or Edge!');
+                    return;
+                }
+
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+
+                const langMap = {
+                    'en': 'en-US',
+                    'hi': 'hi-IN',
+                    'pa': 'pa-IN',
+                    'kn': 'kn-IN'
+                };
+
+                recognition.lang = langMap[currentLanguage] || 'en-US';
+                recognition.continuous = false;
+                recognition.interimResults = true;
+
+                showVoiceInterface('listening', 'Say something...');
+
+                recognition.onstart = function () {
+                    isListening = true;
+                    updateVoiceStatus(`🎤 Listening in ${LANGUAGES[currentLanguage] || 'English'}...`);
+                };
+
+                recognition.onresult = function (event) {
+                    let finalTranscript = '';
+                    let interimTranscript = '';
+
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        const transcript = event.results[i][0].transcript;
+                        if (event.results[i].isFinal) {
+                            finalTranscript += transcript;
+                        } else {
+                            interimTranscript += transcript;
+                        }
+                    }
+
+                    if (finalTranscript) {
+                        document.getElementById('messageInput').value = finalTranscript;
+                        updateVoiceStatus(`✅ Heard: "${finalTranscript}"`);
+
+                        setTimeout(() => {
+                            hideVoiceInterface();
+                            sendMessage();
+                        }, 1500);
+                    } else {
+                        updateVoiceStatus(`🎤 ${interimTranscript || 'Listening...'}`);
+                    }
+                };
+
+                recognition.onerror = function (event) {
+                    isListening = false;
+                    hideVoiceInterface();
+
+                    let errorMessage = 'Voice recognition error: ';
+                    switch (event.error) {
+                        case 'network':
+                            errorMessage = '🌐 Network error. Check your connection.';
+                            break;
+                        case 'not-allowed':
+                            errorMessage = '🎤 Microphone access denied. Please allow microphone access in your browser settings.';
+                            break;
+                        case 'no-speech':
+                            errorMessage = '🔇 No speech detected. Please try again and speak clearly.';
+                            break;
+                        case 'audio-capture':
+                            errorMessage = '🎤 No microphone found. Please connect a microphone.';
+                            break;
+                        default:
+                            errorMessage += event.error;
+                    }
+
+                    // Show user-friendly toast instead of alert
+                    showToast(errorMessage, 'error');
+                };
+
+                recognition.onend = function () {
+                    isListening = false;
+                    if (document.querySelector('.voice-interface')) {
+                        setTimeout(hideVoiceInterface, 1000);
+                    }
+                };
+
+                recognition.start();
+            }
+
+            function showVoiceInterface(mode, text) {
+                const existing = document.querySelector('.voice-interface');
+                if (existing) existing.remove();
+
+                const voiceInterface = document.createElement('div');
+                voiceInterface.className = 'voice-interface';
+                voiceInterface.innerHTML = `
+                    <div class="voice-circle ${mode}" id="voiceCircle">
+                        <span class="material-symbols-outlined text-6xl text-white">
+                            ${mode === 'listening' ? 'mic' : 'volume_up'}
+                        </span>
+                    </div>
+                    <div class="voice-text" id="voiceText">${text}</div>
+                    <div class="voice-status text-lg" id="voiceStatus">
+                        ${mode === 'listening' ? 'Speak now...' : 'Processing...'}
+                    </div>
+                    <button onclick="hideVoiceInterface()" 
+                            class="mt-6 px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-full transition-colors font-medium flex items-center gap-2">
+                        <span class="material-symbols-outlined">stop</span>
+                        Stop
+                    </button>
+                    <p class="text-sm text-gray-400 mt-4 max-w-sm text-center">
+                        Language: ${LANGUAGES[currentLanguage] || 'English'}
+                    </p>
+                `;
+
+                document.body.appendChild(voiceInterface);
+            }
+
+            function updateVoiceStatus(status) {
+                const statusElement = document.getElementById('voiceStatus');
+                if (statusElement) {
+                    statusElement.textContent = status;
+                }
+            }
+
+            function hideVoiceInterface() {
+                const voiceInterface = document.querySelector('.voice-interface');
+                if (voiceInterface) {
+                    voiceInterface.remove();
+                }
+
+                if (recognition && isListening) {
+                    recognition.stop();
+                    isListening = false;
+                }
+            }
+
+            function changeLanguage() {
+                    currentLanguage = document.getElementById('language-select').value;
+                    console.log('Language changed to:', currentLanguage);
+                    const langName = LANGUAGES[currentLanguage] || 'English';
+
+                    // Translate UI
+                    translateUI(currentLanguage);
+
+                    showToast(`Language changed to ${langName}`, 'success');
+                }
+
+
+            async function uploadResume(file) {
+                const formData = new FormData();
+                formData.append('resume', file);
+
+                const statusDiv = document.getElementById('uploadStatus');
+                statusDiv.className = 'mt-2 text-sm text-primary font-medium';
+                statusDiv.textContent = '📤 Uploading and analyzing...';
+                statusDiv.classList.remove('hidden');
+
+                try {
+                    const response = await fetch('/api/upload-resume', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        statusDiv.className = 'mt-2 text-sm text-green-600 font-medium';
+                        statusDiv.textContent = '✅ Resume analyzed successfully!';
+
+                        addMessage(`📄 Uploaded: ${file.name}`, true);
+                        addMessage(data.message, false);
+
+                        if (data.analysis && data.analysis.job_suggestions) {
+                            setTimeout(() => {
+                                addJobSuggestions(data.analysis);
+                            }, 1000);
+                        }
+
+                        setTimeout(() => {
+                            statusDiv.classList.add('hidden');
+                        }, 3000);
+                    } else {
+                        statusDiv.className = 'mt-2 text-sm text-red-500 font-medium';
+                        statusDiv.textContent = `❌ ${data.error}`;
+                    }
+                } catch (error) {
+                    statusDiv.className = 'mt-2 text-sm text-red-500 font-medium';
+                    statusDiv.textContent = '❌ Upload failed. Please try again.';
+                }
+            }
+
+            function handleFileSelect(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    uploadResume(file);
+                }
+            }
+
+            function handleFileDrop(event) {
+                event.preventDefault();
+                event.currentTarget.classList.remove('dragover');
+
+                const files = event.dataTransfer.files;
+                if (files.length > 0) {
+                    uploadResume(files[0]);
+                }
+            }
+
+            // Event listeners
+            document.getElementById('language-select').addEventListener('change', changeLanguage);
+            const messageInput = document.getElementById('messageInput');
+            messageInput.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') {
+                    hideVoiceInterface();
+                }
+            });
+
+            // Initialize theme on page load
+            initializeTheme();
+            // UI Translation Dictionary
+                const UI_TRANSLATIONS = {
+                    'en': {
+                        'careermate': 'CareerMate',
+                        'ai_career_assistant': 'AI Career Assistant',
+                        'upload_resume': 'Upload your resume or files',
+                        'ai_features': 'AI Features',
+                        'resume_analysis': 'Resume Analysis',
+                        'career_chat': 'Career Chat',
+                        'smart_job_search': 'Smart Job Search',
+                        'interview_prep': 'Interview Prep',
+                        'linkedin_jobs': 'LinkedIn Jobs',
+                        'language': 'Language',
+                        'voice_input': 'Voice Input',
+                        'type_message': 'Type your message...'
+                    },
+                    'kn': {
+                        'careermate': 'ಕ್ಯಾರಿಯರ್‌ಮೇಟ್',
+                        'ai_career_assistant': 'AI ವೃತ್ತಿ ಸಹಾಯಕ',
+                        'upload_resume': 'ನಿಮ್ಮ ರೆಸ್ಯೂಮೆ ಅಥವಾ ಫೈಲ್‌ಗಳನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ',
+                        'ai_features': 'AI ವೈಶಿಷ್ಟ್ಯಗಳು',
+                        'resume_analysis': 'ರೆಸ್ಯೂಮೆ ವಿಶ್ಲೇಷಣೆ',
+                        'career_chat': 'ವೃತ್ತಿ ಚಾಟ್',
+                        'smart_job_search': 'ಸ್ಮಾರ್ಟ್ ಜಾಬ್ ಹುಡುಕಾಟ',
+                        'interview_prep': 'ಸಂದರ್ಶನ ತಯಾರಿ',
+                        'linkedin_jobs': 'ಲಿಂಕ್ಡ್‌ಇನ್ ಉದ್ಯೋಗಗಳು',
+                        'language': 'ಭಾಷೆ',
+                        'voice_input': 'ಧ್ವನಿ ಇನ್‌ಪುಟ್',
+                        'type_message': 'ನಿಮ್ಮ ಸಂದೇಶವನ್ನು ಟೈಪ್ ಮಾಡಿ...'
+                    },
+                    'hi': {
+                        'careermate': 'करियरमेट',
+                        'ai_career_assistant': 'AI करियर सहायक',
+                        'upload_resume': 'अपना रिज्यूमे या फाइलें अपलोड करें',
+                        'ai_features': 'AI सुविधाएं',
+                        'resume_analysis': 'रिज्यूमे विश्लेषण',
+                        'career_chat': 'करियर चैट',
+                        'smart_job_search': 'स्मार्ट जॉब खोज',
+                        'interview_prep': 'इंटरव्यू तैयारी',
+                        'linkedin_jobs': 'लिंक्डइन जॉब्स',
+                        'language': 'भाषा',
+                        'voice_input': 'आवाज इनपुट',
+                        'type_message': 'अपना संदेश टाइप करें...'
+                    },
+                    'pa': {
+                        'careermate': 'ਕਰੀਅਰਮੇਟ',
+                        'ai_career_assistant': 'AI ਕਰੀਅਰ ਸਹਾਇਕ',
+                        'upload_resume': 'ਆਪਣਾ ਰਿਜ਼ਿਊਮ ਜਾਂ ਫਾਈਲਾਂ ਅੱਪਲੋਡ ਕਰੋ',
+                        'ai_features': 'AI ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ',
+                        'resume_analysis': 'ਰਿਜ਼ਿਊਮ ਵਿਸ਼ਲੇਸ਼ਣ',
+                        'career_chat': 'ਕਰੀਅਰ ਚੈਟ',
+                        'smart_job_search': 'ਸਮਾਰਟ ਜੌਬ ਖੋਜ',
+                        'interview_prep': 'ਇੰਟਰਵਿਊ ਤਿਆਰੀ',
+                        'linkedin_jobs': 'ਲਿੰਕਡਇਨ ਨੌਕਰੀਆਂ',
+                        'language': 'ਭਾਸ਼ਾ',
+                        'voice_input': 'ਆਵਾਜ਼ ਇਨਪੁਟ',
+                        'type_message': 'ਆਪਣਾ ਸੁਨੇਹਾ ਟਾਈਪ ਕਰੋ...'
+                    }
+                };
+
+                // Function to translate UI
+                function translateUI(lang) {
+                    const translations = UI_TRANSLATIONS[lang] || UI_TRANSLATIONS['en'];
+
+                    // Update all data-translate elements
+                    document.querySelectorAll('[data-translate]').forEach(element => {
+                        const key = element.getAttribute('data-translate');
+                        if (translations[key]) {
+                            if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                                element.placeholder = translations[key];
+                            } else {
+                                element.textContent = translations[key];
+                            }
+                        }
+                    });
+
+                    console.log(`✅ UI translated to ${lang}`);
+                }
+
+        </script>
+
+    </body>
+
+    </html>
